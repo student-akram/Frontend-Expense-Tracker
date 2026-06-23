@@ -1,23 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
+import { API_KEY } from "../services/firebase";
 
 function Profile() {
   const navigate = useNavigate();
 
-  const [fullName, setFullName] =
-    useState("");
+  const [fullName, setFullName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
 
-  const [photoUrl, setPhotoUrl] =
-    useState("");
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
-  const updateProfileHandler = async () => {
-    const token =
-      localStorage.getItem("token");
+  const fetchUserDetails = async () => {
+    const token = localStorage.getItem("token");
 
     try {
       const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAhSQQB1pyeICbbnsggAJAKmL0Sox6_8S4",
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
         {
           method: "POST",
           headers: {
@@ -26,98 +27,156 @@ function Profile() {
           },
           body: JSON.stringify({
             idToken: token,
-            displayName: fullName,
-            photoUrl: photoUrl,
-            returnSecureToken: true,
           }),
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
-      console.log(data);
+      const user = data.users[0];
 
-      alert(
-        "Profile Updated Successfully"
+      setFullName(
+        user.displayName || ""
+      );
+
+      setPhotoUrl(
+        user.photoUrl || ""
       );
     } catch (error) {
-      alert("Something went wrong");
+      console.log(error);
     }
   };
 
+  const updateProfileHandler =
+    async () => {
+      const token =
+        localStorage.getItem("token");
+
+      try {
+        const response =
+          await fetch(
+            `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                idToken: token,
+                displayName:
+                  fullName,
+                photoUrl:
+                  photoUrl,
+                returnSecureToken: true,
+              }),
+            }
+          );
+
+        const data =
+          await response.json();
+
+        console.log(data);
+
+        alert(
+          "Profile Updated Successfully"
+        );
+
+        fetchUserDetails();
+      } catch (error) {
+        console.log(error);
+
+        alert(
+          "Something went wrong"
+        );
+      }
+    };
+
   return (
-  <div className="profile-container">
-    <div className="profile-header">
-      <p className="quote">
-        Winners never quit, Quitters never win.
-      </p>
+    <div className="profile-container">
+      <div className="profile-header">
+        <p className="quote">
+          Winners never quit,
+          Quitters never win.
+        </p>
 
-      <div className="profile-status">
-        Your Profile is 64% completed.
-        A complete Profile has higher
-        chances of landing a job.
-        <a href="#">Complete now</a>
+        <div className="profile-status">
+          Your Profile is 64%
+          completed.
+          <a href="#">
+            Complete now
+          </a>
+        </div>
       </div>
-    </div>
 
-    <div className="contact-section">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h2>Contact Details</h2>
-
-        <button
-          className="cancel-btn"
-          onClick={() => navigate("/welcome")}
+      <div className="contact-section">
+        <div
+          style={{
+            display: "flex",
+            justifyContent:
+              "space-between",
+            alignItems: "center",
+          }}
         >
-          Cancel
-        </button>
-      </div>
+          <h2>Contact Details</h2>
 
-      <div className="form-row">
-        <div className="form-group">
-          <label>Full Name</label>
-
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) =>
-              setFullName(e.target.value)
+          <button
+            className="cancel-btn"
+            onClick={() =>
+              navigate("/welcome")
             }
-          />
+          >
+            Cancel
+          </button>
         </div>
 
-        <div className="form-group">
-          <label>Profile Photo URL</label>
+        <div className="form-row">
+          <div className="form-group">
+            <label>
+              Full Name
+            </label>
 
-          <input
-            type="text"
-            value={photoUrl}
-            onChange={(e) =>
-              setPhotoUrl(e.target.value)
-            }
-          />
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) =>
+                setFullName(
+                  e.target.value
+                )
+              }
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              Profile Photo URL
+            </label>
+
+            <input
+              type="text"
+              value={photoUrl}
+              onChange={(e) =>
+                setPhotoUrl(
+                  e.target.value
+                )
+              }
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="btn-group">
         <button
           className="update-btn"
-          onClick={updateProfileHandler}
+          onClick={
+            updateProfileHandler
+          }
         >
           Update
         </button>
-      </div>
 
-      <hr />
+        <hr />
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Profile;

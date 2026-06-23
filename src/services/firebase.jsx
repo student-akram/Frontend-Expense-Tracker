@@ -2,14 +2,19 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAhSQQB1pyeICbbnsggAJAKmL0Sox6_8S4",
-  authDomain: "expense-tracker-cce56.firebaseapp.com",
-  projectId: "expense-tracker-cce56",
-  storageBucket: "expense-tracker-cce56.firebasestorage.app",
-  messagingSenderId: "483974152981",
-  appId: "1:483974152981:web:e048bc5d90d7e92098df1c",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+
+export const API_KEY =
+  import.meta.env.VITE_FIREBASE_API_KEY;
