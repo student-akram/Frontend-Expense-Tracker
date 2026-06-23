@@ -1,5 +1,7 @@
 import { useState } from "react";
 import "./ExpenseTracker.css";
+import { useEffect } from "react";
+import { DATABASE_URL } from "../services/firebase";
 
 function ExpenseTracker() {
   const [amount, setAmount] = useState("");
@@ -11,26 +13,75 @@ function ExpenseTracker() {
 
   const [expenses, setExpenses] =
     useState([]);
+    useEffect(() => {
+  fetchExpenses();
+}, []);
+const fetchExpenses = async () => {
+  try {
+    const response = await fetch(
+      `${DATABASE_URL}/expenses.json`
+    );
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+    const data = await response.json();
 
-    const newExpense = {
-      id: Date.now(),
-      amount,
-      description,
-      category,
-    };
+    if (!data) {
+      setExpenses([]);
+      return;
+    }
 
-    setExpenses((prev) => [
-      ...prev,
-      newExpense,
-    ]);
+    const loadedExpenses = [];
+
+    for (const key in data) {
+      loadedExpenses.push({
+        id: key,
+        ...data[key],
+      });
+    }
+
+    setExpenses(loadedExpenses);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+ const submitHandler = async (e) => {
+  e.preventDefault();
+
+  const expense = {
+    amount,
+    description,
+    category,
+  };
+
+  try {
+    const response = await fetch(
+      `${DATABASE_URL}/expenses.json`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify(expense),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Failed to save expense"
+      );
+    }
+
+    fetchExpenses();
 
     setAmount("");
     setDescription("");
     setCategory("Food");
-  };
+
+  } catch (error) {
+    alert(error.message);
+  }
+};
 
   return (
     <div className="expense-container">
