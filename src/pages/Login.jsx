@@ -3,6 +3,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
 
 function Login() {
     const navigate = useNavigate();
@@ -28,6 +30,9 @@ function Login() {
             localStorage.setItem(
                 "token",
                 token
+            );
+            dispatch(
+                authActions.login(token)
             );
 
             navigate("/welcome");

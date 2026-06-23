@@ -2,11 +2,16 @@ import { Link } from "react-router-dom";
 import { API_KEY } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import ExpenseTracker from "../pages/ExpenseTracker";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/authSlice";
 
 function Welcome() {
     const navigate = useNavigate();
     const logoutHandler = () => {
   localStorage.removeItem("token");
+  dispatch(
+  authActions.logout()
+);
 
   navigate("/login");
 };
