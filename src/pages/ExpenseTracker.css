@@ -1,0 +1,40 @@
+.expense-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.expense-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.expense-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.expense-form input,
+.expense-form select {
+  padding: 10px;
+  flex: 1;
+}
+
+.expense-form button {
+  background: royalblue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+}
+
+.expense-list {
+  margin-top: 30px;
+}
+
+.expense-card {
+  background: #f5f5f5;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { API_KEY } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
+import ExpenseTracker from "../pages/ExpenseTracker";
 
 function Welcome() {
     const navigate = useNavigate();
@@ -61,6 +62,7 @@ function Welcome() {
   <h2>
     Welcome to Expense Tracker!!!
   </h2>
+  <ExpenseTracker />
 
   <div
     style={{
