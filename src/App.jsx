@@ -7,6 +7,7 @@ import {
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
+import Profile from "./pages/Profile";
 import "./App.css"
 
 function App() {
@@ -28,6 +29,10 @@ function App() {
           path="/welcome"
           element={<Welcome />}
         />
+        <Route
+  path="/profile"
+  element={<Profile />}
+/>
 
       </Routes>
     </BrowserRouter>
