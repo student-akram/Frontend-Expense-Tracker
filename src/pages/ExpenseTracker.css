@@ -1,7 +1,8 @@
 .expense-container {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+
+  margin: 20px auto;
 }
 
 .expense-container h2 {
@@ -11,14 +12,14 @@
 
 .expense-form {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
 .expense-form input,
 .expense-form select {
-  padding: 10px;
   flex: 1;
+  min-width: 200px;
 }
 
 .expense-form button {
@@ -37,4 +38,12 @@
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 6px;
+}
+.dark-theme {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-theme .expense-card {
+  background-color: #2a2a2a;
 }

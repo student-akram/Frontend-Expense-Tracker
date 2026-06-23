@@ -112,3 +112,17 @@ body {
   padding: 6px 12px;
   cursor: pointer;
 }
+.premium-actions {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.premium-btn {
+  background: #222;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}

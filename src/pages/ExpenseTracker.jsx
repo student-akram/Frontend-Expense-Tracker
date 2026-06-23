@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ExpenseTracker.css";
 import { DATABASE_URL } from "../services/firebase";
+import { themeActions } from "../store/themeSlice";
 
 import {
   useDispatch,
@@ -19,18 +20,28 @@ function ExpenseTracker() {
     useState("Food");
   const [editingId, setEditingId] =
     useState(null);
+    const [premiumActivated,
+setPremiumActivated] =
+useState(false);
 
   const dispatch = useDispatch();
 
   const expenses = useSelector(
     (state) => state.expenses.expenses
   );
+  
 
   const totalExpenses = expenses.reduce(
     (total, expense) =>
       total + Number(expense.amount),
     0
   );
+  const darkMode = useSelector(
+  (state) => state.theme.darkMode
+);
+const toggleThemeHandler = () => {
+  dispatch(themeActions.toggleTheme());
+};
 
   useEffect(() => {
     fetchExpenses();
@@ -155,9 +166,65 @@ function ExpenseTracker() {
 
     setEditingId(expense.id);
   };
+const downloadCSVHandler = () => {
+
+  if (expenses.length === 0) {
+    alert("No expenses found");
+    return;
+  }
+
+  const headers =
+    "Amount,Description,Category\n";
+
+  const rows = expenses
+    .map(
+      (expense) =>
+        `${expense.amount},${expense.description},${expense.category}`
+    )
+    .join("\n");
+
+  const csvContent =
+    headers + rows;
+
+  const blob = new Blob(
+    [csvContent],
+    {
+      type: "text/csv;charset=utf-8;",
+    }
+  );
+
+  const link =
+    document.createElement("a");
+
+  const url =
+    URL.createObjectURL(blob);
+
+  link.href = url;
+
+  link.download = "expenses.csv";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+};
 
   return (
-    <div className="expense-container">
+    <div
+  className="expense-container"
+  style={{
+    backgroundColor: darkMode
+      ? "#222"
+      : "#fff",
+
+    color: darkMode
+      ? "#fff"
+      : "#000",
+
+    minHeight: "100vh",
+  }}
+>
       <h2>Expense Tracker</h2>
 
       <form
@@ -208,21 +275,25 @@ function ExpenseTracker() {
         </button>
       </form>
 
-      {totalExpenses > 10000 && (
-        <button
-          style={{
-            backgroundColor: "gold",
-            color: "black",
-            padding: "10px",
-            marginTop: "20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Activate Premium
-        </button>
-      )}
+{totalExpenses > 10000 && (
+  <>
+    <div className="premium-actions">
+  <button
+    className="premium-btn"
+    onClick={toggleThemeHandler}
+  >
+    Toggle Theme
+  </button>
+
+  <button
+    className="premium-btn"
+    onClick={downloadCSVHandler}
+  >
+    Download CSV
+  </button>
+</div>
+  </>
+)}
 
       <div className="expense-list">
         <h3>Your Expenses</h3>
@@ -269,5 +340,6 @@ function ExpenseTracker() {
     </div>
   );
 }
+
 
 export default ExpenseTracker;

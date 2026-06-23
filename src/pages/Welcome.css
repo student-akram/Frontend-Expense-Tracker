@@ -1,0 +1,14 @@
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 40px;
+  border-bottom: 1px solid #ccc;
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}

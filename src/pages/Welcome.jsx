@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ExpenseTracker from "../pages/ExpenseTracker";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/authSlice";
+import "./welcome.css"
 
 function Welcome() {
     const navigate = useNavigate();
@@ -55,27 +56,10 @@ function Welcome() {
 
   return (
     <>
-      <div
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px",
-    borderBottom: "1px solid #ccc",
-  }}
->
-  <h2>
-    Welcome to Expense Tracker!!!
-  </h2>
-  <ExpenseTracker />
+      <div className="welcome-header">
+  <h1>Welcome to Expense Tracker!!!</h1>
 
-  <div
-    style={{
-      display: "flex",
-      gap: "10px",
-      alignItems: "center",
-    }}
-  >
+  <div className="welcome-actions">
     <Link to="/profile">
       Complete Profile
     </Link>
@@ -88,6 +72,8 @@ function Welcome() {
     </button>
   </div>
 </div>
+
+<ExpenseTracker />
 </>
   );
 }
