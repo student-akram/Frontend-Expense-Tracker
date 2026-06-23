@@ -13,6 +13,7 @@ function ExpenseTracker() {
 
   const [expenses, setExpenses] =
     useState([]);
+    const [editingId, setEditingId] = useState(null);
     useEffect(() => {
   fetchExpenses();
 }, []);
@@ -54,22 +55,35 @@ const fetchExpenses = async () => {
   };
 
   try {
-    const response = await fetch(
-      `${DATABASE_URL}/expenses.json`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify(expense),
-      }
-    );
 
-    if (!response.ok) {
-      throw new Error(
-        "Failed to save expense"
+    if (editingId) {
+
+      await fetch(
+        `${DATABASE_URL}/expenses/${editingId}.json`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(expense),
+        }
       );
+
+      setEditingId(null);
+
+    } else {
+
+      await fetch(
+        `${DATABASE_URL}/expenses.json`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(expense),
+        }
+      );
+
     }
 
     fetchExpenses();
@@ -79,8 +93,41 @@ const fetchExpenses = async () => {
     setCategory("Food");
 
   } catch (error) {
-    alert(error.message);
+    console.log(error);
   }
+};
+const deleteExpenseHandler = async (id) => {
+
+  try {
+
+    await fetch(
+      `${DATABASE_URL}/expenses/${id}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    console.log(
+      "Expense successfully deleted"
+    );
+
+    fetchExpenses();
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+const editExpenseHandler = (expense) => {
+
+  setAmount(expense.amount);
+
+  setDescription(
+    expense.description
+  );
+
+  setCategory(expense.category);
+
+  setEditingId(expense.id);
 };
 
   return (
@@ -128,26 +175,56 @@ const fetchExpenses = async () => {
           <option>Shopping</option>
         </select>
 
-        <button type="submit">
-          Add Expense
-        </button>
+<button type="submit">
+  {editingId
+    ? "Update Expense"
+    : "Add Expense"}
+</button>
       </form>
 
       <div className="expense-list">
         <h3>Your Expenses</h3>
 
-        {expenses.map((expense) => (
-          <div
-            key={expense.id}
-            className="expense-card"
-          >
-            ₹{expense.amount}
-            {" - "}
-            {expense.description}
-            {" - "}
-            {expense.category}
-          </div>
-        ))}
+{
+  expenses.map((expense) => (
+    <div
+      key={expense.id}
+      className="expense-card"
+    >
+      <div>
+        ₹{expense.amount}
+        {" - "}
+        {expense.description}
+        {" - "}
+        {expense.category}
+      </div>
+
+      <div className="expense-actions">
+
+        <button
+          className="edit-btn"
+          onClick={() =>
+            editExpenseHandler(expense)
+          }
+        >
+          Edit
+        </button>
+
+        <button
+          className="delete-btn"
+          onClick={() =>
+            deleteExpenseHandler(
+              expense.id
+            )
+          }
+        >
+          Delete
+        </button>
+
+      </div>
+    </div>
+  ))
+}
       </div>
     </div>
   );
