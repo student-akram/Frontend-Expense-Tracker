@@ -8,6 +8,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
 import "./App.css"
 
 function App() {
@@ -33,7 +34,10 @@ function App() {
   path="/profile"
   element={<Profile />}
 />
-
+<Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
       </Routes>
     </BrowserRouter>
   );

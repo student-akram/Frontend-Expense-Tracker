@@ -65,7 +65,16 @@ function Login() {
                 <button type="submit">
                     Login
                 </button>
-
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginTop: "15px",
+                    }}
+                >
+                    <Link to="/forgot-password">
+                        Forgot Password?
+                    </Link>
+                </div>
                 <p>
                     Don't have an account?
                     <Link to="/">
