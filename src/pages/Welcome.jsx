@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import { API_KEY } from "../services/firebase";
+import { useNavigate } from "react-router-dom";
 
 function Welcome() {
+    const navigate = useNavigate();
+    const logoutHandler = () => {
+  localStorage.removeItem("token");
+
+  navigate("/login");
+};
 
   const verifyEmailHandler = async () => {
 
@@ -43,40 +50,38 @@ function Welcome() {
   return (
     <>
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "20px",
-          borderBottom: "1px solid black",
-        }}
-      >
-        <h2>
-          Welcome to Expense Tracker!!!
-        </h2>
-
-        <div>
-          Your profile is incomplete.
-
-          <Link to="/profile">
-            Complete now
-          </Link>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: "30px",
-          padding: "20px",
-        }}
-      >
-<button
-  className="verify-btn"
-  onClick={verifyEmailHandler}
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "20px",
+    borderBottom: "1px solid #ccc",
+  }}
 >
-  Verify Email
-</button>
-      </div>
-    </>
+  <h2>
+    Welcome to Expense Tracker!!!
+  </h2>
+
+  <div
+    style={{
+      display: "flex",
+      gap: "10px",
+      alignItems: "center",
+    }}
+  >
+    <Link to="/profile">
+      Complete Profile
+    </Link>
+
+    <button
+      className="logout-btn"
+      onClick={logoutHandler}
+    >
+      Logout
+    </button>
+  </div>
+</div>
+</>
   );
 }
 
