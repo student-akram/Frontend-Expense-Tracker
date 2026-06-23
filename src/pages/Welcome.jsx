@@ -1,6 +1,45 @@
 import { Link } from "react-router-dom";
+import { API_KEY } from "../services/firebase";
 
 function Welcome() {
+
+  const verifyEmailHandler = async () => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+
+      const response = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            requestType: "VERIFY_EMAIL",
+            idToken: token,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error.message
+        );
+      }
+
+      alert(
+        "Verification Email Sent Successfully"
+      );
+
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <>
       <div
@@ -22,6 +61,20 @@ function Welcome() {
             Complete now
           </Link>
         </div>
+      </div>
+
+      <div
+        style={{
+          marginTop: "30px",
+          padding: "20px",
+        }}
+      >
+<button
+  className="verify-btn"
+  onClick={verifyEmailHandler}
+>
+  Verify Email
+</button>
       </div>
     </>
   );
